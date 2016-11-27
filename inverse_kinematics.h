@@ -2,6 +2,7 @@
 #define __INVERSE_KINEMATICS_H
 
 #include <iostream>
+#include <vector>
 #include <Eigen/Eigen>
 
 using namespace std;
@@ -9,7 +10,7 @@ using namespace Eigen;
 
 typedef Matrix<double, 6, 1> Vector6d;
 
-Matrix4d forward_kinematics(Vector6d);
-Vector6d inverse_kinematics(Matrix4d);
+Matrix4d forward_kinematics(Vector3d);
+vector<Vector3d>  inverse_kinematics(Matrix4d);
 
 #endif

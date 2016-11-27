@@ -436,10 +436,14 @@ using namespace ur_kinematics;
 
 int main(int argc, char* argv[])
 {
-  srand(time(0));
+  // srand(time(0));
+  srand(0);
   double q[6] = {0.0};
   for (int i = 0; i < 6; i++)
-    q[i] = rand() % 100 / 100.0 * M_PI;
+  {
+    //q[i] = rand() % 100 / 100.0 * M_PI;
+    q[i] = 0;//i * M_PI / 2;
+  }
 
   printf("q: %lf,%lf,%lf,%lf,%lf,%lf,\n", 
     q[0], q[1], q[2], q[3],q[4],q[5]);

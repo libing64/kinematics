@@ -64,7 +64,7 @@ Matrix4d forward_kinematics(Vector6d theta)
 	double alpha[6] =  {M_PI / 2, 0, 0, M_PI / 2, -M_PI / 2, 0};
 	double offset[6] = {0, -M_PI / 2, 0, -M_PI / 2, 0, 0};
 	Matrix4d T = Matrix4d::Identity();
-	for (int i = 0; i < 4; i++)
+	for (int i = 0; i < 6; i++)
 	{
 		Matrix4d Ti;
 		Ti << cos(theta(i)),    -sin(theta(i)) * cos(alpha[i]), sin(theta(i)) * sin(alpha[i]), a[i] * cos(theta(i)),
@@ -98,9 +98,11 @@ vector<Vector6d> inverse_kinematics(const Matrix4d T)
 	cout << "T_16: " << T_16 << endl;
 	cout << "(T_16(1, 3) - d4) / d6: " << (T_16(1, 3) - d4) / d6 << endl;
 	//d4 + cos(theta5) * d6 = p_16_z
-	theta(4) = acos( (T_16(2, 3) - d4) / d6 );
-	theta(5) = atan2( T_16(1, 3), T_16(0, 3) );
-
+	//theta(4) = acos( (T_16(2, 3) - d4) / d6 );
+	theta(4) = acos(T_16(2, 2) );
+	// the third row of R16 :cos(q6)*sin(q5), -sin(q5)*sin(q6), cos(q5) 
+	theta(5) = atan2( -T_16(2, 1),  T_16(2, 0));
+	
 	Matrix4d T_56 = transform(5, theta(5));
 	Matrix4d T_45 = transform(4, theta(4));
 

@@ -11,6 +11,6 @@ using namespace Eigen;
 typedef Matrix<double, 6, 1> Vector6d;
 
 Matrix4d forward_kinematics(Vector4d);
-vector<Vector4d>  inverse_kinematics(Matrix4d);
+vector<Vector6d>  inverse_kinematics(Matrix4d);
 
 #endif

@@ -71,7 +71,7 @@ Matrix4d forward_kinematics(Vector6d theta)
 		      sin(theta(i)),    cos(theta(i))  * cos(alpha[i]), -cos(theta(i))*sin(alpha[i]),  a[i] * sin(theta(i)),
 		      0,                sin(alpha[i]),                  cos(alpha[i]),                 d[i],
 		      0,                0,                              0,                             1;
-		cout << "T: " << i << " " << Ti << endl;
+		// cout << "T: " << i << " " << Ti << endl;
 		T = T * Ti;
 	}
 	return T;
@@ -94,9 +94,7 @@ vector<Vector6d> inverse_kinematics(const Matrix4d T)
 	theta(0) = alpha1 + alpha2;
 	
 	Matrix4d T_01 = transform(0, theta(0));
-	cout << "T_01:" << T_01 << endl;
 	Matrix4d T_16 = T_01.inverse() * T;
-	cout << "T_16: " << T_16 << endl;
 	//d4 + cos(theta5) * d6 = p_16_z
 	//theta(4) = acos( (T_16(2, 3) - d4) / d6 );
 	theta(4) = acos(T_16(2, 2) );
@@ -105,11 +103,8 @@ vector<Vector6d> inverse_kinematics(const Matrix4d T)
 
 	Matrix4d T_56 = transform(5, theta(5));
 	Matrix4d T_45 = transform(4, theta(4));
-	cout << "T_56: " << T_56 << endl;
-	cout << "T_45: " << T_45 << endl;
 	//solve theta(1), theta(2), theta(3) from T_14
 	Matrix4d T_14 = T_01.inverse() * T * (T_45 * T_56).inverse();
-	cout << "T_14: " << T_14 << endl;
 	t(0) = T_14(0, 3);
 	t(1) = T_14(1, 3);
 	t(2) = T_14(2, 3);
@@ -118,6 +113,10 @@ vector<Vector6d> inverse_kinematics(const Matrix4d T)
 	theta(2) = acos( -(a2*a2 + a3 * a3 - r * r) / (2 * a2 * a3) );
 	theta(1) = atan2(t(1), t(0)) - atan2(a3 * sin(theta(2)), a2 + a3 * cos(theta(2)));
 
+	Matrix4d T_12 = transform(1, theta(1));
+	Matrix4d T_23 = transform(2, theta(2));
+	Matrix4d T_34 = (T_01 * T_12 * T_23).inverse() * T * (T_45 * T_56).inverse();
+	theta(3) = acos(T_34(0, 0));
 	vector<Vector6d> theta_q(1);
 	theta_q[0] = theta;
 	return theta_q;

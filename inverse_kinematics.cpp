@@ -71,7 +71,6 @@ Matrix4d forward_kinematics(Vector6d theta)
 		      sin(theta(i)),    cos(theta(i))  * cos(alpha[i]), -cos(theta(i))*sin(alpha[i]),  a[i] * sin(theta(i)),
 		      0,                sin(alpha[i]),                  cos(alpha[i]),                 d[i],
 		      0,                0,                              0,                             1;
-		// cout << "T: " << i << " " << Ti << endl;
 		T = T * Ti;
 	}
 	return T;
@@ -87,7 +86,6 @@ vector<Vector6d> inverse_kinematics(const Matrix4d T)
 	Matrix3d R = T.block<3, 3>(0, 0);
 	Vector3d p_05 = R * Vector3d(0, 0, -d6) + t;
 
-	//two solutions
 	double alpha1 = atan2( p_05(1), p_05(0) );
 	double r = p_05.segment<2>(0).norm();
 	double alpha2 = asin(d4 / r);
@@ -103,7 +101,6 @@ vector<Vector6d> inverse_kinematics(const Matrix4d T)
 
 	Matrix4d T_56 = transform(5, theta(5));
 	Matrix4d T_45 = transform(4, theta(4));
-	//solve theta(1), theta(2), theta(3) from T_14
 	Matrix4d T_14 = T_01.inverse() * T * (T_45 * T_56).inverse();
 	t(0) = T_14(0, 3);
 	t(1) = T_14(1, 3);
@@ -112,7 +109,6 @@ vector<Vector6d> inverse_kinematics(const Matrix4d T)
 	r = t.segment<2>(0).norm();
 	theta(2) = acos( -(a2*a2 + a3 * a3 - r * r) / (2 * a2 * a3) );
 	theta(1) = atan2(t(1), t(0)) - atan2(a3 * sin(theta(2)), a2 + a3 * cos(theta(2)));
-
 	Matrix4d T_12 = transform(1, theta(1));
 	Matrix4d T_23 = transform(2, theta(2));
 	Matrix4d T_34 = (T_01 * T_12 * T_23).inverse() * T * (T_45 * T_56).inverse();
@@ -127,19 +123,18 @@ int main()
 
 	srand(time(0));
 	Vector6d theta;
-	theta <<  2.04204,  1.19381,  1.31947,  1.25664, 0.251327, 0.345575;
-	// for (int i = 0; i < 6; i++)
-	// {
-	// 	// theta(i) = 0;//i * M_PI / 2;
-	// 	theta(i) = rand() % 100 / 100.0 * M_PI;
-	// }
+	// theta <<  2.04204,  1.19381,  1.31947,  1.25664, 0.251327, 0.345575;
+	for (int i = 0; i < 6; i++)
+	{
+		// theta(i) = 0;//i * M_PI / 2;
+		theta(i) = rand() % 100 / 100.0 * M_PI;
+	}
 
 	cout << "theta: " << theta.transpose() << endl;
 
 	Matrix4d T = forward_kinematics(theta);
 	cout << "T:\n" << T << endl;
 	Matrix4d T14 = transform(1, theta(1)) * transform(2, theta(2)) * transform(3, theta(3));
-	cout << "T14: " << T14 << endl;
 	vector<Vector6d> theta_q = inverse_kinematics(T);
 	for(int i = 0; i < theta_q.size(); i++)
 	{

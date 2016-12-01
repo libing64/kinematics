@@ -40,6 +40,12 @@ T6 = [    cos(theta(i)),    -sin(theta(i)),  0, 0,
 
 % T = T1 * T2 * T3 * T4 * T5 * T6
 T = T2 * T3 * T4 * T5 * T6
+
+T14 = T2 * T3 * T4
+
+tt = T14 * [0; 0; -d4; 1]
+
+%T13 = T2 * T3
 return;
 
 cos(q6)*(sin(q1)*sin(q5) + cos(q5)*(cos(q4)*(cos(q1)*cos(q2)*cos(q3) - cos(q1)*sin(q2)*sin(q3)) - sin(q4)*(cos(q1)*cos(q2)*sin(q3) + cos(q1)*cos(q3)*sin(q2)))) - sin(q6)*(cos(q4)*(cos(q1)*cos(q2)*sin(q3) + cos(q1)*cos(q3)*sin(q2)) + sin(q4)*(cos(q1)*cos(q2)*cos(q3) - cos(q1)*sin(q2)*sin(q3))), 
@@ -60,4 +66,9 @@ d1 + a2*sin(q2) - d5*(cos(q4)*(cos(q2)*cos(q3) - sin(q2)*sin(q3)) - sin(q4)*(cos
 1
 
 
-%  solve q from these equation
+ % T14 
+[ cos(q4)*(cos(q2)*cos(q3) - sin(q2)*sin(q3)) - sin(q4)*(cos(q2)*sin(q3) + cos(q3)*sin(q2)), 0, cos(q4)*(cos(q2)*sin(q3) + cos(q3)*sin(q2)) + sin(q4)*(cos(q2)*cos(q3) - sin(q2)*sin(q3)), a2*cos(q2) + a3*cos(q2)*cos(q3) - a3*sin(q2)*sin(q3)]
+[ cos(q4)*(cos(q2)*sin(q3) + cos(q3)*sin(q2)) + sin(q4)*(cos(q2)*cos(q3) - sin(q2)*sin(q3)), 0, sin(q4)*(cos(q2)*sin(q3) + cos(q3)*sin(q2)) - cos(q4)*(cos(q2)*cos(q3) - sin(q2)*sin(q3)), a2*sin(q2) + a3*cos(q2)*sin(q3) + a3*cos(q3)*sin(q2)]
+[                                                                                         0, 1,                                                                                         0,                                                   d4]
+[                                                                                         0, 0,                                                                                         0,                                                    1]
+ 
